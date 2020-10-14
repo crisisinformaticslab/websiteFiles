@@ -1,0 +1,15 @@
+<html>
+	<head>
+		<title>BYU Crisislab Secrets Manager - Add Folder</title>
+	</head>
+	<body>
+		<h3>Add New Collection</h3>
+		<form action="/addCollection" method="post" autocomplete="off" novalidate>
+		{{ form.hidden_tag() }}
+		{{ form.addCollection }}
+		{{ form.csrf_token }}
+		<br><br><input type="submit" name="submit" value="Submit">
+		</form>
+		<br><br><a href="/">Return to Main Screen</a>
+	</body>
+<html>

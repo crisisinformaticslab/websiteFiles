@@ -1,0 +1,57 @@
+<html>
+	<head>
+		<title>BYU Crisislab Secrets Manager - Main Page</title>
+	</head>
+	<body>
+		{% if current_user.is_authenticated %}
+		<h1>Welcome to BYU Crisislab, {{ current_user.username }}</h1>
+		{% else %}
+		<h1>Authentication ERR</h1>
+		{% endif %}
+		<a href="/logout">Logout</a>
+		<hr>
+		<div>Current terms: {{ current_term }}</div>
+		<br><div>Please note, calls to AWS are limited to one every 5 seconds.  If the presented data looks out of date, refresh your browser.</div>
+		<h2>Collections</h2>
+		{% for folder, terms in folderSystem.items() %}
+			<h3>{{ folder }}</h3>
+			{%for term in terms %}
+			<div>Term: {{ term }}</div>
+			{% if tasks %}
+			{% for task in tasks %}
+			{% for overrides in task.overrides.containerOverrides %}
+			{% for environment in overrides.environment %}
+			{% if term == environment.value %}
+				<div>Status: {{ task.lastStatus }}</div>
+				{% if task.lastStatus == "RUNNING" %}
+					<div>Task started at: {{ task.startedAt|formatdatetime }}</div>
+				{% endif %}
+				<br>
+			{% endif %}
+			{% endfor %}
+			{% endfor %}
+			{% endfor %}
+			{% endif %}
+			{% endfor %}
+			<a href="{{ '/editCollection?collection=%s'%folder|urlencode }}">Edit Collection</a>
+		{% endfor %}
+		<hr>
+		<br><a href="/addCollection">Add New Collection</a>
+		<br><a href="/athena">Go To Athena Main Page</a>
+		<hr>
+		{% block content %}{% endblock %}
+	</body>
+</html>
+<script>
+function errorAlert(){
+	{% with messages = get_flashed_messages(category_filter=["systemError"]) %}
+	{% if messages %}
+	{% for message in messages %}
+		setTimeout(function(){ alert("{{ message }}"); }, 100);
+	{% endfor %}
+	{% endif %}
+	{% endwith %}
+}
+
+document.addEventListener("DOMContentLoaded", errorAlert);
+</script>

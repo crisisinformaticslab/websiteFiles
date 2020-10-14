@@ -1,0 +1,67 @@
+<html>
+	<head>
+		<title>BYU Crisislab Athena - Main Page</title>
+	</head>
+	<body>
+		<h1>BYU Crisislab - Athena</h1>
+		<h2>Welcome, {{ current_user.username }}</h2>
+		<a href="/logout">Logout</a>
+		<hr>
+		<h3>Current Saved Queries:</h3>
+		{% if query %}
+		{% for item in query %}
+			<div>
+				Name: {{ item['Name'] }}
+				<br>Desc: {{ item['Description'] }}
+				<br>Query: {{ item['QueryString'] }}
+			</div>
+			<br><br>
+		{% endfor %}
+		<hr>
+		<h4>Run Query:</h4>
+		<form action="/athena" method="post" novalidate>
+		{{ form.hidden_tag() }}
+		{{ form.queryName }}
+		{{ form.csrf_token }}
+		<br><br>
+		<input type="submit" name="submit" value="Execute named query">
+		</form>
+		{% else %}
+		<div>No current saved queries</div>
+		{% endif %}
+		<hr>
+		{% if collections %}
+		{% for collection in collections %}
+		<div>
+		<b>{{ collection['name'] }}</b>
+		<br># of tweets gathered: {{ collection['tweets'] }}
+		<br>Collection created: {{ collection['date'] }}
+		</div>
+		<br>
+		{% endfor %}
+		{% endif %}
+		<hr>
+		<br><a href="/athena/viewQueries">View previously ran queries</a>
+		<br><a href="/athena/runCrawler">Force-run Glue Crawler and Athena statistics query</a>
+		<br><a href="/">Return to Main Screen</a>		
+		{% if results %}
+		<hr>
+		<h4>Results</h4>
+		{{ results }}
+		{% endif %}
+
+	</body>
+</html>
+<script>
+function errorAlert(){
+	{% with messages = get_flashed_messages(category_filter=["systemError"]) %}
+	{% if messages %}
+	{% for message in messages %}
+		setTimeout(function(){ alert("{{ message }}"); }, 100);
+	{% endfor %}
+	{% endif %}
+	{% endwith %}
+}
+
+document.addEventListener("DOMContentLoaded", errorAlert);
+</script>

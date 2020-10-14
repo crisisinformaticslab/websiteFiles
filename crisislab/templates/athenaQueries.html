@@ -1,0 +1,32 @@
+<html>
+	<head>
+		<title>BYU Crisislab Athena - View Queries</title>
+	</head>
+	<body>
+		<h1>BYU Crisislab - View Athena Queries</h1>
+		<h2>Welcome, {{ current_user.username }}</h2>
+		<a href="/logout">Logout</a>
+		<hr>
+		<h3>Query executions:</h3>
+		{% for query in queryData %}
+		<div>
+		<b>Query:</b><br> {{ query['Query'] }}
+		<br><b>Query called at</b> <br>{{ query['Status']['SubmissionDateTime'] }}
+		<br><br><b>Status: {{ query['Status']['State'] }}</b>
+		<hr>
+		{% if query['Status']['State'] == "FAILED" %}
+		<br><b>Fail State</b>: {{ query['Status']['StateChangeReason'] }}
+		{% elif query['Status']['State'] == "SUCCEEDED" %}
+		Results:
+		{% for item in query['ResultData']['ResultSet']['Rows'] %} 
+		{{ item }}
+		{% endfor %}
+		<hr>
+		{% endif %}
+		</div>
+		<br><br>
+		{% endfor %}
+		<a href="/athena">Go back to Athena main page</a>
+	</body>
+</html>
+

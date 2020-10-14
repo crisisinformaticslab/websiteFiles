@@ -1,0 +1,52 @@
+{% extends "editCollection.html" %}
+
+{% block content %}
+
+<html>
+	<body>
+		<form action="{{ '/editCollection/editTerms?collection=%s'%folderName|urlencode }}" method="post" autocomplete="off" novalidate>
+		{{ form.hidden_tag() }}
+		<h2>Add New Terms</h2>
+		<div class='content'>
+
+			<p>
+				<h4>{{ form.first_param.label }}:</h4>
+				{{ form.first_param(size=32) }}
+			</p>
+
+			<p>
+				<h4>{{ form.second_param.label }}:</h4>
+				{{ form.second_param(size=32) }}
+			</p>
+
+			<p>
+				<h4>{{ form.third_param.label }}:</h4>
+				{{ form.third_param(size=32) }}
+			</p>
+
+			<p>
+				<h4>{{ form.fourth_param.label }}:</h4>
+				{{ form.fourth_param(size=32) }}
+			</p>
+
+			<p>
+				<h4>{{ form.fifth_param.label }}:</h4>
+				{{ form.fifth_param(size=32) }}
+			</p>
+		</div>
+
+		<h2>Delete Existing Terms</h2>
+		<div class='content'>
+
+		{% for item in form.myTerms %}
+			{{ item.hidden_tag() }}
+			{{ item.term.data }}
+			{{ item.term }}
+			<br>
+		{% endfor %}
+		{{ form.csrf_token }}
+		<br><input type="submit" name="submit" value="Submit changes">
+		</form>
+	</body>
+</html>
+{% endblock %}
